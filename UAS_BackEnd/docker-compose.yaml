@@ -1,0 +1,46 @@
+version: '3.0'
+services: 
+  db:
+    image: mysql 
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - cheko
+    volumes:
+      - tugas-mysql-data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    networks:
+      - cheko
+
+  apps:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project_uts
+    restart: always
+    ports:
+      - 3001:3001
+    networks:
+      - cheko
+    volumes:
+      - ./:/app
+    
+
+
+networks:
+  cheko:
+    driver: bridge
+
+volumes:
+  tugas-mysql-data:
+    
+    
